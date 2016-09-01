@@ -5,13 +5,11 @@
  *      Author: Administrator
  */
 
-#include<iostream>
-
-using namespace std;
+#include "Include.h"
 
 int main()
 {
-	cout<<"hello"<<endl;
+	MyListTest();
 	return 0;
 }
 
