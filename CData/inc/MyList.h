@@ -31,7 +31,20 @@ Status isEmpty(ArrList *L);
 Status insertList(ArrList *L,ElemType elem,int pos);
 Status delList(ArrList *L,int pos);
 void printArrList(ArrList *L);
+Status mergeLists(ArrList *list1,ArrList *list2,ArrList *list3);
+Status quickSort(ArrList *list,int left,int right);
 
+typedef struct LNode{
+	ElemType data;
+	struct LNode *next;
+}LNode,*LinkList;
+
+Status initLinkList(LinkList &list);
+Status createLinkList(LinkList list,int n);
+Status printLinkList(LinkList list);
+void testLinkList();
+Status insertLinkList(LinkList list,ElemType elem,int pos);
+Status delLinkList(LinkList list,int pos,ElemType &elem);
 
 
 #endif /* MYLIST_H_ */

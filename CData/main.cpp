@@ -9,7 +9,8 @@
 
 int main()
 {
-	MyListTest();
+	//MyListTest();
+	testLinkList();
 	return 0;
 }
 
