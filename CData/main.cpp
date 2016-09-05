@@ -10,7 +10,10 @@
 int main()
 {
 	//MyListTest();
-	testLinkList();
+	//testLinkList();
+
+	//SqStackTest();
+	LStackTest();
 	return 0;
 }
 

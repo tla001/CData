@@ -19,5 +19,6 @@ using namespace std;
  * 数据结构，自定义
  */
 #include "MyList.h"
+#include "MyStack.h"
 
 #endif /* INCLUDE_H_ */
