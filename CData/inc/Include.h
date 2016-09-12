@@ -20,5 +20,8 @@ using namespace std;
  */
 #include "MyList.h"
 #include "MyStack.h"
+#include "MyFIFO.h"
+#include "MyString.h"
+#include "MyTree.h"
 
 #endif /* INCLUDE_H_ */

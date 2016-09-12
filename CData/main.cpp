@@ -13,7 +13,15 @@ int main()
 	//testLinkList();
 
 	//SqStackTest();
-	LStackTest();
+	//LStackTest();
+	//hanoiTest();
+
+	//AQTest();
+	//LQTest();
+
+	//HStringTest();
+
+	BitTreeTest();
 	return 0;
 }
 

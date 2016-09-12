@@ -75,9 +75,24 @@ Status LPush(LStack &s,LElemType e)
 }
 Status LPop(LStack &s,LElemType &e)
 {
+	LinkListS p;
 	if(s.top==NULL) return -1;
 	e=s.top->data;
+	p=s.top;
 	s.top=s.top->next;
+	free(p);
+	return 0;
+}
+Status printStack(LStack s)
+{
+	LinkListS p;
+	p=s.top;
+	cout<<"stack: ";
+	while(p){
+		cout<<p->data<<" ";
+		p=p->next;
+	}
+	cout<<endl;
 	return 0;
 }
 void LStackTest()
@@ -93,4 +108,35 @@ void LStackTest()
 	cout<<"pop "<<e<<endl;
 	LGetTop(s,e);
 	cout<<"top "<<e<<endl;
+}
+/************************hanoi*************************************************/
+void move(LStack &lsa,LStack &lsb)
+{
+	LElemType e;
+	LPop(lsa,e);
+	//cout<<e<<endl;
+	LPush(lsb,e);
+}
+void hanoi(int n,LStack &X,LStack &Y,LStack &Z)
+{
+	if(n==1)  move(X,Z);
+	else{
+		hanoi(n-1,X,Z,Y);
+		move(X,Z);
+		hanoi(n-1,Y,X,Z);
+	}
+}
+void hanoiTest()
+{
+	LStack lx,ly,lz;
+	InitLStack(lx);
+	InitLStack(ly);
+	InitLStack(lz);
+	int i=0,n=10;
+	for(i=n;i>=1;i--){
+		LPush(lx,i);
+	}
+	printStack(lx);
+	hanoi(n,lx,ly,lz);
+	printStack(lz);
 }

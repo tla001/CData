@@ -43,5 +43,6 @@ Status LPush(LStack &s,LElemType e);
 Status LPop(LStack &s,LElemType &e);
 void LStackTest();
 
+void hanoiTest();
 
 #endif /* MYSTACK_H_ */
