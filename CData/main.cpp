@@ -7,8 +7,7 @@
 
 #include "Include.h"
 
-int main()
-{
+int main() {
 	//MyListTest();
 	//testLinkList();
 
@@ -21,9 +20,13 @@ int main()
 
 	//HStringTest();
 
-	BitTreeTest();
+	//BitTreeTest();
+	//BstTest();
+	//AVLTest();
+
+	//MGraphTest();
+	LGraphTest();
+	//TGraphTest();
 	return 0;
 }
-
-
 

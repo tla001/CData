@@ -168,4 +168,30 @@ public:
 
 };
 
+BitTree BstFind(BitTree T, TElemType e);
+BitTree BstFindMin(BitTree T);
+BitTree BstFindMax(BitTree T);
+BitTree BstInsert(BitTree &T, TElemType e);
+BitTree BstDelete(BitTree T, TElemType e);
+void BstTest();
+
+typedef struct AVLTREE {
+	TElemType data;
+	int bf;
+	struct AVLTREE *lchild, *rchild;
+}*AVLTree, *AVLNode;
+
+extern bool *taller;
+int AVLInsert(AVLTree &T, TElemType e, bool *taller);
+void AVLLeftBalance(AVLTree &T);
+void AVLRightBalance(AVLTree &T);
+void R_Rotate(AVLTree &T);
+void L_Rotate(AVLTree &T);
+void AVLDelTree(AVLTree &T);
+void AVLPrintTree(AVLTree &T);
+void AVLTest();
+#define EH 0            /*等高*/
+#define LH 1            /*左高*/
+#define RH -1            /*右高*/
+
 #endif /* MYTREE_H_ */

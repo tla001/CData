@@ -8,7 +8,6 @@
 #ifndef INCLUDE_H_
 #define INCLUDE_H_
 
-
 #include<iostream>
 #include<stdlib.h>
 //#include<vector>
@@ -23,5 +22,6 @@ using namespace std;
 #include "MyFIFO.h"
 #include "MyString.h"
 #include "MyTree.h"
+#include "MyGraph.h"
 
 #endif /* INCLUDE_H_ */
