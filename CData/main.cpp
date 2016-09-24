@@ -21,12 +21,19 @@ int main() {
 	//HStringTest();
 
 	//BitTreeTest();
+	//BitTreeTest1();
+	//BitTreeTest3();
+	//BitTreeTest4();
+	BitTreeTest5();
 	//BstTest();
 	//AVLTest();
 
 	//MGraphTest();
-	LGraphTest();
+	//LGraphTest();
 	//TGraphTest();
+
+	//mergeSortTest1();
+	//mergeSortTest2();
 	return 0;
 }
 

@@ -23,5 +23,6 @@ using namespace std;
 #include "MyString.h"
 #include "MyTree.h"
 #include "MyGraph.h"
+#include "MySort.h"
 
 #endif /* INCLUDE_H_ */

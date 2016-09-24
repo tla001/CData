@@ -166,6 +166,239 @@ void BitTreeTest() {
 	cout << "Post:\t\t";
 	PostOrderTraverse(T);
 }
+#include <stdio.h>
+#include<string.h>
+#include <math.h>
+int InitBiTree(BitTree &T) {
+	T = (BitTree) malloc(sizeof(BitNode));
+	if (!T) {
+		return 0;
+	} else {
+		T->data = NULL;
+		T->lchild = NULL;
+		T->rchild = NULL;
+		return 1;
+	}
+}
+//层序构建，非队列方式
+Status CreateBitTree1(BitTree &T, char *str) {
+	BitTree m, q;
+	q = T;
+	int length, i, j;
+	length = strlen(str);
+	cout << "length=" << length << endl;
+
+	if (length < 1 && length > 31)
+		return -1;
+	q->data = str[0];
+
+	for (i = 2; i <= length; i++) {
+		m = (BitTree) malloc(sizeof(BitNode));
+		m->data = str[i - 1];
+		m->lchild = NULL;
+		m->rchild = NULL;
+
+		for (j = 1; j < (int) floor(log10(i) / log10(2)); j++) //log2(i)为要添加节点的上一层
+				{
+			if (((int) floor(i / pow(2, (int) (log10(i) / log10(2)) - j))) % 2
+					== 0) //0为左孩子
+					{
+				if (q->lchild == NULL) {
+					printf("输入错误,第%d个节点无父节点\n", i);
+					free(m);
+					return 0;
+				}
+				q = q->lchild;
+			}
+
+			else {
+				if (q->rchild == NULL) {
+					printf("输入错误，第%d个节点无父节点\n", i);
+					free(m);
+					return 0;
+				}
+				q = q->rchild;
+			}
+		}
+
+		//判断左右孩子
+		if (i % 2 == 0) {
+			q->lchild = m;
+			printf("左插入%c\n", m->data);
+		} else {
+			q->rchild = m;
+			printf("右插入%c\n", m->data);
+		}
+		q = T;
+	}
+	return 0;
+}
+//层序构建，队列方式
+Status CreateBitTree2(BitTree &T, char *str) {
+	int length = strlen(str);
+	int i = 1;
+	BitTree root, temp;
+	queue q;
+	q.InitQueue();
+	//根节点
+	InitBiTree(root);
+	root->data = str[0];
+	q.EnQueue(root);
+	T = root;
+
+	while (!q.QueueEmpty()) {
+		temp = q.DeQueue();
+		if (i <= length && str[i] != '\0') {
+			InitBiTree(root);
+			root->data = str[i];
+			q.EnQueue(root);
+			temp->lchild = root;
+		}
+		i++;
+		if (i <= length && str[i] != '\0') {
+			InitBiTree(root);
+			root->data = str[i];
+			q.EnQueue(root);
+			temp->rchild = root;
+		}
+		i++;
+	}
+	return 0;
+}
+void BitTreeTest1() {
+	BitTree T, T1;
+	char str[] = "ABCDEFGHIJKL";
+	InitBiTree(T);
+	CreateBitTree1(T, str);
+	//PreOrderTraverseFor(T);
+	//cout << endl;
+	LevelOrderTraverse(T);
+	cout << endl;
+	InitBiTree(T1);
+	CreateBitTree2(T1, str);
+	LevelOrderTraverse(T1);
+}
+//已知先序、中序，求后序
+void CreateBitTree3(BitTree &T, char *preOder, char *midOder, int length) {
+	if (length == 0) {
+		T = NULL;
+		return;
+	}
+	BitTree root;
+	root = (BitTree) malloc(sizeof(BitNode));
+	root->data = *preOder;
+	T = root;
+
+//	char *rootpos = strchr(midOder, root->data);
+//	if (rootpos == NULL) {
+//		cout << "input wrong order sample" << endl;
+//	}
+//	int lTreeLength = strlen(midOder) - strlen(rootpos);
+//	int rTreeLength = length - lTreeLength - 1;
+//
+//	CreateBitTree3(root->lchild, preOder + 1, midOder, lTreeLength);
+//	CreateBitTree3(root->rchild, preOder + lTreeLength + 1, rootpos + 1,
+//			rTreeLength);
+	int rootIndex = 0;
+	for (; rootIndex < length; rootIndex++) {
+		if (midOder[rootIndex] == *preOder)
+			break;
+	}
+	CreateBitTree3(root->lchild, preOder + 1, midOder, rootIndex);
+	CreateBitTree3(root->rchild, preOder + rootIndex + 1,
+			midOder + rootIndex + 1, length - rootIndex - 1);
+}
+void BitTreeTest3() {
+	BitTree T;
+	char pre[] = "abdeijcfg";
+	char mid[] = "dbiejafcg";
+	CreateBitTree3(T, pre, mid, strlen(pre));
+	PreOrderTraverseFor(T);
+	cout << endl;
+	PostOrderTraverseFor(T);
+}
+//已知中序、后序，求先序
+void CreateBitTree4(BitTree &T, char *midOder, char *postOder, int length) {
+	if (length == 0) {
+		T = NULL;
+		return;
+	}
+	BitTree root;
+	root = (BitTree) malloc(sizeof(BitNode));
+	root->data = *(postOder + length - 1);
+	T = root;
+
+	int rootIndex = 0;
+	for (; rootIndex < length; rootIndex++) {
+		if (midOder[rootIndex] == *(postOder + length - 1))
+			break;
+	}
+	CreateBitTree4(root->lchild, midOder, postOder, rootIndex);
+	CreateBitTree4(root->rchild, midOder + rootIndex + 1, postOder + rootIndex,
+			length - rootIndex - 1);
+
+}
+void BitTreeTest4() {
+	BitTree T;
+	char mid[] = "dbgeafc";
+	char post[] = "dgebfca";
+	CreateBitTree4(T, mid, post, strlen(mid));
+	PreOrderTraverseFor(T);
+	cout << endl;
+	PostOrderTraverseFor(T);
+}
+//二叉树镜像，递归实现
+void MirrorBitTree(BitTree &T) {
+	if (NULL == T)
+		return;
+	if (NULL != T->lchild || NULL != T->rchild) {
+		BitTree temp = T->lchild;
+		T->lchild = T->rchild;
+		T->rchild = temp;
+	}
+
+	if (T->lchild)
+		MirrorBitTree(T->lchild);
+	if (T->rchild)
+		MirrorBitTree(T->rchild);
+}
+//二叉树镜像，非递归实现
+void MirrorBitTree1(BitTree &T) {
+	if (NULL == T)
+		return;
+	stack s;
+	s.inItStack();
+	s.push(T);
+
+	while (!s.isEmpty()) {
+		BitTree root = s.getTop();
+		s.pop();
+		if (NULL != root->lchild || NULL != root->rchild) {
+			BitTree temp = root->lchild;
+			root->lchild = root->rchild;
+			root->rchild = temp;
+		}
+		if (NULL != root->lchild)
+			s.push(root->lchild);
+		if (NULL != root->rchild)
+			s.push(root->rchild);
+	}
+}
+
+void BitTreeTest5() {
+	BitTree T;
+	char str[] = "ABCDEFGHIJKL";
+	InitBiTree(T);
+	CreateBitTree1(T, str);
+	LevelOrderTraverse(T);
+	cout << endl;
+	MirrorBitTree(T);
+	LevelOrderTraverse(T);
+	cout << endl;
+	MirrorBitTree1(T);
+	LevelOrderTraverse(T);
+	cout << endl;
+}
 /***************二叉搜索树*********************************/
 BitTree BstFind(BitTree T, TElemType e) {
 //	if (!T)
