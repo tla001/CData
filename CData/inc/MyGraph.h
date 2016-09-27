@@ -23,6 +23,7 @@ typedef struct {
 	EdgeType arc[MAXVEX][MAXVEX];
 	int numVer, numEdg;
 } MGraph;
+
 int LocateMGraph(MGraph *g, VertexType v);
 void CreateMGraph(MGraph *g);
 void PrintMGraph(MGraph g);
@@ -69,4 +70,20 @@ int LocateTGraph(GraphTList *g, VertexType v);
 void CreateTGraph(GraphTList *g);
 void PrintTGraph(GraphTList *g);
 void TGraphTest();
+
+//Prim用结构体
+struct CloseEdge {
+	VertexType adjvex;
+	EdgeType lowcost;
+};
+//Kruskal 用结构体
+struct EdgeInfo {
+	VertexType v1;
+	VertexType v2;
+	EdgeType cost;
+	int used;		//0表示未用，1表示用了，筛选时用
+};
+void MGraphPrimTest();
+void MGraphKruskalTest();		//传值方式
+void MGraphKruskalTest1();		//返回值方式
 #endif /* INC_MYGRAPH_H_ */

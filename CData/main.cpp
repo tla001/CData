@@ -24,13 +24,16 @@ int main() {
 	//BitTreeTest1();
 	//BitTreeTest3();
 	//BitTreeTest4();
-	BitTreeTest5();
+	//BitTreeTest5();
 	//BstTest();
 	//AVLTest();
 
 	//MGraphTest();
 	//LGraphTest();
 	//TGraphTest();
+	//MGraphPrimTest();
+	//MGraphKruskalTest();
+	MGraphKruskalTest1();
 
 	//mergeSortTest1();
 	//mergeSortTest2();
