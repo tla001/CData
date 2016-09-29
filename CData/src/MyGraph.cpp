@@ -518,7 +518,7 @@ struct EdgeInfo *MiniEdgeInfo1(struct EdgeInfo *allEdge, int size) {
 	return mini;
 }
 //struct EdgeInfo *&saver 需要修改指针的值，因而需要&
-struct EdgeInfo * MiniSpanTree_Kruskal1(MGraph *g, struct EdgeInfo *&saver) {
+void MiniSpanTree_Kruskal1(MGraph *g, struct EdgeInfo *&saver) {
 	//筛选出所有的点/边信息，形成集合
 	struct EdgeInfo *allEdge = (struct EdgeInfo *) malloc(
 			sizeof(EdgeInfo) * g->numEdg);
@@ -567,7 +567,6 @@ struct EdgeInfo * MiniSpanTree_Kruskal1(MGraph *g, struct EdgeInfo *&saver) {
 			break;		//如果找够了n-1条边，提前结束
 	}
 	free(vexEnds);
-	return saver;
 }
 void MGraphKruskalTest1() {
 	MGraph g;
@@ -578,3 +577,237 @@ void MGraphKruskalTest1() {
 	MiniSpanTree_Kruskal1(&g, saver);
 	PrintMST_Kruskal(saver, g.numVer - 1);
 }
+/************************Dijkstra **********************/
+void ShortPath_Dijkstra(MGraph *g, EdgeType *&dist, int *&path, VertexType s) {
+	int k = LocateMGraph(g, s);
+	dist = (EdgeType*) malloc(sizeof(EdgeType) * g->numVer);
+	path = (int*) malloc(sizeof(int) * g->numVer);
+	int *visited = (int*) malloc(sizeof(int) * g->numVer);
+	//初始化距离值
+	for (int i = 0; i < g->numVer; i++) {
+		if (g->arc[k][i] != 65535) {
+			dist[i] = g->arc[k][i];
+			path[i] = k;
+		} else {
+			dist[i] = 65535;
+			path[i] = -1;
+		}
+		visited[i] = 0;
+	}
+	visited[k] = 1;
+	//大循环用于遍历余下的顶点，将余下顶点收进来，一圈一圈外扩
+	for (int i = 1; i < g->numVer; i++) {
+		int minDist = 65535;
+		int pos = -1;
+		//查找当前未访问且距离值最小的点
+		for (int j = 0; j < g->numVer; j++) {
+			if (visited[j] == 0 && dist[j] < minDist) {
+				minDist = dist[j];
+				pos = j;
+			}
+		}
+		if (pos < 0)
+			cout << "pos err" << endl;
+		//将当前点归并，并更新剩下点（经过当前点）的距离值
+		visited[pos] = 1;
+		for (int j = 0; j < g->numVer; j++) {
+			if (visited[j] == 0 && g->arc[pos][j] != 65535
+					&& (minDist + g->arc[pos][j]) < dist[j]) {
+				dist[j] = minDist + g->arc[pos][j];
+				path[j] = pos;		//记录父节点
+			}
+		}
+	}
+}
+#include <stack>
+void PrintDShortPath(MGraph *g, EdgeType *dist, int *path, VertexType s,
+		int end) {
+	int k = LocateMGraph(g, s);
+//	int *pa = (int *) malloc(sizeof(int) * g->numVer);
+//	std::stack<int> p;
+//	while (end != k) {
+//		p.push(end);
+//		end = path[end];
+//	}
+//	p.push(end);
+//	int i = 0;
+//	while (!p.empty()) {
+//		pa[i] = p.top();
+//		p.pop();
+//		i++;
+//	}
+//
+//	for (int j = 0; j < i; j++) {
+//		cout << g->vexs[pa[j]] << "\t";
+//	}
+	std::stack<int> p;
+	while (end != k) {
+		p.push(end);
+		end = path[end];
+	}
+	p.push(end);
+	while (!p.empty()) {
+		cout << g->vexs[p.top()] << "\t";
+		p.pop();
+	}
+}
+void MGraphDijkstraTest() {
+	MGraph g;
+	CreateMGraph(&g);
+	PrintMGraph(g);
+	EdgeType *dist;
+	int *path;
+
+	VertexType s = 'a';
+	//MGraphDFSTraverse(g);
+	ShortPath_Dijkstra(&g, dist, path, s);
+	for (int i = 0; i < g.numVer; i++) {
+		if (i != LocateMGraph(&g, s)) {
+			cout << "from " << s << " to " << g.vexs[i] << " the short path : "
+					<< endl;
+			PrintDShortPath(&g, dist, path, s, i);
+			cout << " long: " << dist[i] << endl;
+		}
+	}
+}
+/************************Floyd **********************/
+void ShortPath_Floyd(MGraph *g, EdgeType dist[][MAXVEX], int path[][MAXVEX]) {
+	for (int i = 0; i < g->numVer; i++) {
+		for (int j = 0; j < g->numVer; j++) {
+			dist[i][j] = g->arc[i][j];
+			path[i][j] = -1;
+		}
+	}
+	for (int k = 0; k < g->numVer; k++) {
+		for (int i = 0; i < g->numVer; i++) {
+			for (int j = 0; j < g->numVer; j++) {
+				if (dist[i][j] > (dist[i][k] + dist[k][j])) {
+					dist[i][j] = dist[i][k] + dist[k][j];
+					path[i][j] = k;
+				}
+			}
+		}
+	}
+//	for (int i = 0; i < g->numVer; i++) {
+//		for (int j = 0; j < g->numVer; j++) {
+//			cout << dist[i][j] << "\t";
+//
+//		}
+//		cout << endl;
+//	}
+//	for (int i = 0; i < g->numVer; i++) {
+//		for (int j = 0; j < g->numVer; j++) {
+//			cout << path[i][j] << "\t";
+//
+//		}
+//		cout << endl;
+//	}
+}
+void PrintFloyd(MGraph *g, EdgeType dist[][MAXVEX], int path[][MAXVEX],
+		int start, int end) {
+	std::stack<int> shortpath;
+	int temp = end;
+	while (temp >= 0 && temp != start) {
+		shortpath.push(temp);
+		temp = path[start][temp];
+	}
+	shortpath.push(start);
+	cout << "from " << g->vexs[start] << " to " << g->vexs[end]
+			<< " the short path : " << endl;
+	while (!shortpath.empty()) {
+		cout << g->vexs[shortpath.top()] << "\t";
+		shortpath.pop();
+	}
+	cout << "*** cost : " << dist[start][end] << endl;
+}
+void MGraphFloydTest() {
+	MGraph g;
+	CreateMGraph(&g);
+	PrintMGraph(g);
+	EdgeType dist[MAXVEX][MAXVEX];
+	int path[MAXVEX][MAXVEX];
+
+	//MGraphDFSTraverse(g);
+	ShortPath_Floyd(&g, dist, path);
+	for (int i = 0; i < g.numVer; i++) {
+		for (int j = 0; j < g.numVer; j++)
+			if (i != j) {
+				PrintFloyd(&g, dist, path, i, j);
+			}
+	}
+}
+/************************Floyd 动态数组版本**********************/
+void ShortPath_Floyd1(MGraph *g, EdgeType **&dist, int **&path) {
+	dist = (EdgeType **) malloc(sizeof(EdgeType *) * g->numVer);
+	for (int i = 0; i < g->numVer; i++) {
+		*(dist + i) = (EdgeType *) malloc(sizeof(EdgeType) * g->numVer);
+	}
+	path = (int **) malloc(sizeof(int *) * g->numVer);
+	for (int i = 0; i < g->numVer; i++) {
+		*(path + i) = (int *) malloc(sizeof(int) * g->numVer);
+	}
+
+	for (int i = 0; i < g->numVer; i++) {
+		for (int j = 0; j < g->numVer; j++) {
+			dist[i][j] = g->arc[i][j];
+			path[i][j] = -1;
+		}
+	}
+	for (int k = 0; k < g->numVer; k++) {
+		for (int i = 0; i < g->numVer; i++) {
+			for (int j = 0; j < g->numVer; j++) {
+				if (dist[i][j] > (dist[i][k] + dist[k][j])) {
+					dist[i][j] = dist[i][k] + dist[k][j];
+					path[i][j] = k;
+				}
+			}
+		}
+	}
+//	for (int i = 0; i < g->numVer; i++) {
+//		for (int j = 0; j < g->numVer; j++) {
+//			cout << dist[i][j] << "\t";
+//
+//		}
+//		cout << endl;
+//	}
+//	for (int i = 0; i < g->numVer; i++) {
+//		for (int j = 0; j < g->numVer; j++) {
+//			cout << path[i][j] << "\t";
+//
+//		}
+//		cout << endl;
+//	}
+}
+void PrintFloyd1(MGraph *g, EdgeType **dist, int **path, int start, int end) {
+	std::stack<int> shortpath;
+	int temp = end;
+	while (temp >= 0 && temp != start) {
+		shortpath.push(temp);
+		temp = path[start][temp];
+	}
+	shortpath.push(start);
+	cout << "from " << g->vexs[start] << " to " << g->vexs[end]
+			<< " the short path : " << endl;
+	while (!shortpath.empty()) {
+		cout << g->vexs[shortpath.top()] << "\t";
+		shortpath.pop();
+	}
+	cout << "*** cost : " << dist[start][end] << endl;
+}
+void MGraphFloydTest1() {
+	MGraph g;
+	CreateMGraph(&g);
+	PrintMGraph(g);
+	EdgeType **dist;
+	int **path;
+
+	//MGraphDFSTraverse(g);
+	ShortPath_Floyd1(&g, dist, path);
+	for (int i = 0; i < g.numVer; i++) {
+		for (int j = 0; j < g.numVer; j++)
+			if (i != j) {
+				PrintFloyd1(&g, dist, path, i, j);
+			}
+	}
+}
+

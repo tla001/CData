@@ -86,4 +86,8 @@ struct EdgeInfo {
 void MGraphPrimTest();
 void MGraphKruskalTest();		//传值方式
 void MGraphKruskalTest1();		//返回值方式
+
+void MGraphDijkstraTest();
+void MGraphFloydTest();
+void MGraphFloydTest1();
 #endif /* INC_MYGRAPH_H_ */

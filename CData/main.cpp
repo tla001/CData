@@ -33,7 +33,10 @@ int main() {
 	//TGraphTest();
 	//MGraphPrimTest();
 	//MGraphKruskalTest();
-	MGraphKruskalTest1();
+	//MGraphKruskalTest1();
+	//MGraphDijkstraTest();
+	//MGraphFloydTest();
+	MGraphFloydTest1();
 
 	//mergeSortTest1();
 	//mergeSortTest2();
