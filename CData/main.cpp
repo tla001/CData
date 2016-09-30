@@ -36,10 +36,13 @@ int main() {
 	//MGraphKruskalTest1();
 	//MGraphDijkstraTest();
 	//MGraphFloydTest();
-	MGraphFloydTest1();
+	//MGraphFloydTest1();
 
 	//mergeSortTest1();
 	//mergeSortTest2();
+	//DirectInsertSortTest();
+	//BinaryInsertSortTest();
+	//TwoInsertSortTest();
 	return 0;
 }
 

@@ -481,15 +481,21 @@ BitTree BstDelete(BitTree T, TElemType e) {
 }
 void BstTest() {
 	BitTree T = NULL, pos;
-	BstInsert(T, '4');
+//	BstInsert(T, '4');
+//	BstInsert(T, '2');
+//	BstInsert(T, '3');
+//	BstInsert(T, '3');
+//	BstInsert(T, '5');
+//	BstInsert(T, '6');
+//	BstInsert(T, '1');
+	BstInsert(T, '7');
 	BstInsert(T, '2');
-	BstInsert(T, '3');
-	BstInsert(T, '3');
-	BstInsert(T, '5');
+	BstInsert(T, '4');
 	BstInsert(T, '6');
+	BstInsert(T, '3');
 	BstInsert(T, '1');
-
-	PreOrderTraverseFor(T);
+	BstInsert(T, '5');
+	InOrderTraverseFor(T);
 	cout << endl;
 	BstDelete(T, '2');
 	PreOrderTraverseFor(T);

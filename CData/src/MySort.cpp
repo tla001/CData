@@ -84,3 +84,120 @@ void mergeSortTest2() {
 		cout << list[i] << "\t";
 	}
 }
+/******************直接插入排序************************/
+void PrintDirectInsertSort(int a[], int n, int i) {
+	cout << i << ":";
+	for (int j = 0; j < n; j++) {
+		cout << a[j] << "\t";
+	}
+	cout << endl;
+}
+
+void DirectInsertSort(int a[], int n) {
+	for (int i = 1; i < n; i++) {
+		if (a[i] < a[i - 1]) { //找到小数
+			int j = i - 1;
+			int x = a[i]; //复制为哨兵，即存储待排序元素
+			a[i] = a[i - 1]; //大数后移一次
+			while (x < a[j] && j > -1) {
+				a[j + 1] = a[j]; //找到小数应该在的位置
+				j--;
+			}
+			a[j + 1] = x; //插入小数
+		}
+		PrintDirectInsertSort(a, n, i);
+	}
+}
+void DirectInsertSortTest() {
+	int a[] = { 3, 2, 1, 5, 8, 9, 4, 3, 11, 10 };
+	int n = sizeof(a) / sizeof(int);
+	DirectInsertSort(a, n);
+	PrintDirectInsertSort(a, n, n);
+}
+/******************二分插入排序************************/
+void PrintBinaryInsertSort(int a[], int n, int i) {
+	cout << i << ":";
+	for (int j = 0; j < n; j++) {
+		cout << a[j] << "\t";
+	}
+	cout << endl;
+}
+
+void BinaryInsertSort(int a[], int n) {
+	//刚开始设有序序列只有一个元素 a[0],无序序列为[1...n]了
+	for (int i = 1; i < n; i++) {
+		if (a[i] < a[i - 1]) { //找到小数
+			//当无序序列元素比有序序列最后一个元素小时，利用二分查找法在有序序列中查找插入位置
+			int low = 0;
+			int high = i - 1;
+			int mid = 0;
+			int x = a[i]; //复制为哨兵，即存储待排序元素
+
+			while (low <= high) {
+				mid = (low + high) / 2;
+				if (x >= a[mid]) {
+					low = mid + 1;
+				} else {
+					high = mid - 1;
+				}
+			}
+			//low位置就是要插入的位置,所以low到i之间的元素都需要往后移动一个位置
+			int j = i;
+			while (j > low) {
+				a[j] = a[j - 1];
+				j--;
+			}
+			a[low] = x;
+		}
+		PrintDirectInsertSort(a, n, i);
+	}
+}
+void BinaryInsertSortTest() {
+	int a[] = { 3, 2, 1, 5, 8, 9, 4, 3, 11, 10 };
+	int n = sizeof(a) / sizeof(int);
+	BinaryInsertSort(a, n);
+	PrintBinaryInsertSort(a, n, n);
+}
+/******************二路插入排序************************/
+void PrintTwoInsertSort(int a[], int n, int i) {
+	cout << i << ":";
+	for (int j = 0; j < n; j++) {
+		cout << a[j] << "\t";
+	}
+	cout << endl;
+}
+
+void TwoInsertSort(int a[], int n) {
+	int first = 0, final = 0;
+	int k = 0;
+	int *temp = (int *) malloc(sizeof(int) * n);
+	temp[0] = a[0];
+	for (int i = 1; i < n; i++) {
+		if (a[i] < temp[first]) { // 待插入元素比最小的元素小
+			first = (first - 1 + n) % n;
+			temp[first] = a[i];
+		} else if (a[i] > temp[final]) { // 待插入元素比最大元素大
+			final = (final + 1 + n) % n;
+			temp[final] = a[i];
+		} else { // 插入元素比最小大，比最大小
+			k = (final + 1 + n) % n;
+			while (temp[(k - 1 + n) % n] > a[i]) {
+				temp[(k + n) % n] = temp[((k - 1 + n) % n)];
+				k = (k - 1 + n) % n;
+			}
+			temp[(k + n) % n] = a[i];
+			final = (final + 1 + n) % n;
+		}
+		PrintTwoInsertSort(temp, n, i);
+	}
+	for (k = 0; k < n; k++) {
+		a[k] = temp[(first + k) % n];
+	}
+	free(temp);
+}
+void TwoInsertSortTest() {
+	int a[] = { 3, 2, 1, 5, 8, 9, 4, 3, 11, 10 };
+	int n = sizeof(a) / sizeof(int);
+	TwoInsertSort(a, n);
+	PrintTwoInsertSort(a, n, n);
+}

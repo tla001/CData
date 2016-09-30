@@ -16,4 +16,8 @@ void mergeSortTest1();
 void mergeSort2(int *list, int length);
 void mergeSortTest2();
 
+void DirectInsertSortTest();
+void BinaryInsertSortTest();
+void TwoInsertSortTest();
+
 #endif /* INC_MYSORT_H_ */
