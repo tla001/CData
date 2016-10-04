@@ -201,3 +201,226 @@ void TwoInsertSortTest() {
 	TwoInsertSort(a, n);
 	PrintTwoInsertSort(a, n, n);
 }
+/******************希尔排序（缩小增量排序）************************/
+void PrintShellInsertSort(int a[], int n, int i) {
+	cout << i << ":";
+	for (int j = 0; j < n; j++) {
+		cout << a[j] << "\t";
+	}
+	cout << endl;
+}
+
+void ShellInsertSort(int a[], int n, int dk) {
+	for (int i = dk; i < n; i++) {
+		if (a[i] < a[i - dk]) {
+			int j = i - dk;
+			int x = a[i];
+			a[i] = a[j];
+			while (x < a[j]) {
+				a[j + dk] = a[j];
+				j -= dk;
+			}
+			a[j + dk] = x;
+		}
+		PrintShellInsertSort(a, n, i);
+	}
+}
+void ShellSort(int a[], int n) {
+	int dk = n / 2;
+	while (dk >= 1) {
+		ShellInsertSort(a, n, dk);
+		dk /= 2;
+	}
+}
+void ShellInsertSortTest() {
+	int a[] = { 3, 2, 1, 5, 8, 9, 4, 3, 11, 10 };
+	int n = sizeof(a) / sizeof(int);
+	ShellSort(a, n);
+	PrintShellInsertSort(a, n, n);
+}
+/******************选择排序************************/
+void PrintSelectSort(int a[], int n, int i) {
+	cout << i << ":";
+	for (int j = 0; j < n; j++) {
+		cout << a[j] << "\t";
+	}
+	cout << endl;
+}
+
+void SelectSort(int a[], int n) {
+	for (int i = 0; i < n; i++) {
+		for (int j = i + 1; j < n; j++) {
+			if (a[i] > a[j]) {
+				int temp = a[i];
+				a[i] = a[j];
+				a[j] = temp;
+			}
+		}
+		PrintSelectSort(a, n, i);
+	}
+}
+void SelectTwoSort(int a[], int n) {
+	for (int i = 0; i < n / 2; i++) {
+		int min = i, max = i;
+		for (int j = i + 1; j < n - i; j++) {
+			if (a[j] >= a[max]) {
+				max = j;
+				continue;
+			}
+			if (a[j] < a[min]) {
+				min = j;
+			}
+		}
+		int temp = a[i];
+		a[i] = a[min];
+		a[min] = temp;
+		temp = a[n - i - 1];
+		a[n - i - 1] = a[max];
+		a[max] = temp;
+		PrintSelectSort(a, n, i);
+	}
+}
+void SelectSortTest() {
+	int a[] = { 3, 2, 1, 5, 8, 9, 4, 3, 11, 10 };
+	int n = sizeof(a) / sizeof(int);
+//	SelectSort(a, n);
+//	PrintSelectSort(a, n, n);
+//	cout << endl << endl;
+	SelectTwoSort(a, n);
+	PrintSelectSort(a, n, n);
+}
+/******************堆排序************************/
+void PrintHeapSort(int a[], int n) {
+	for (int j = 0; j < n; j++) {
+		cout << a[j] << "\t";
+	}
+	cout << endl;
+}
+void HeapAdjust(int a[], int parent, int length) {
+	int temp = a[parent]; //保存当前父节点
+	int child = 2 * parent + 1; //获取左孩子
+	while (child < length) {
+		/*****大顶堆*******
+		 //如果有有孩子，且右孩子大于做孩子，选取右孩子节点
+		 if (child + 1 < length && a[child] < a[child + 1]) {
+		 child++;
+		 }
+		 // 如果父结点的值已经大于孩子结点的值，则直接结束
+		 if (a[parent] >= a[child]) {
+		 break;
+		 }*/
+		/*****小顶堆********/
+		//如果有有孩子，且右孩子小于做孩子，选取右孩子节点
+		if (child + 1 < length && a[child] > a[child + 1]) {
+			child++;
+		}
+		// 如果父结点的值已经小于孩子结点的值，则直接结束
+		if (a[parent] < a[child]) {
+			break;
+		}
+		// 把孩子结点的值赋给父结点
+		a[parent] = a[child];
+		// 选取孩子结点的左孩子结点,继续向下筛选
+		parent = child;
+		child = 2 * child + 1;
+		a[parent] = temp;
+	}
+	//PrintHeapSort(a, length);
+}
+/** 
+ * 初始堆进行调整
+ * 将H[0..length-1]建成堆
+ * 调整完之后第一个元素是序列的最小的元素
+ */
+void BuildHeap(int a[], int length) {
+	for (int i = (length - 1) / 2; i >= 0; --i) {
+		HeapAdjust(a, i, length);
+	}
+}
+void HeapSort(int a[], int length) {
+	BuildHeap(a, length);
+	PrintHeapSort(a, length);
+	for (int i = length - 1; i > 0; i--) { //大顶堆时，顺序；小顶堆时，逆序
+		int temp = a[i];
+		a[i] = a[0];
+		a[0] = temp;
+		HeapAdjust(a, 0, i);
+		PrintHeapSort(a, length);
+	}
+}
+void HeapSortTest() {
+	int a[] = { 3, 2, 1, 5, 8, 9, 4, 3, 11, 10 };
+	int n = sizeof(a) / sizeof(int);
+	HeapSort(a, n);
+	PrintHeapSort(a, n);
+}
+/******************冒泡排序************************/
+void PrintBubbleSort(int a[], int n, int i) {
+	cout << i << ":";
+	for (int j = 0; j < n; j++) {
+		cout << a[j] << "\t";
+	}
+	cout << endl;
+}
+void BubbleSort(int a[], int n) {
+	for (int i = 0; i < n - 1; i++) {
+		for (int j = 0; j < n - i - 1; j++) {
+			if (a[j] > a[j + 1]) {
+				int temp = a[j];
+				a[j] = a[j + 1];
+				a[j + 1] = temp;
+			}
+		}
+		PrintBubbleSort(a, n, i);
+	}
+}
+//设置一标志性变量pos,用于记录每趟排序中最后一次进行交换的位置。
+//由于pos位置之后的记录均已交换到位,故在进行下一趟排序时只要扫描到pos位置即可
+void BubbleSort1(int a[], int n) {
+	int i = n - 1;
+	while (i > 0) {
+		int pos = 0;
+		for (int j = 0; j < i; j++) {
+			if (a[j] > a[j + 1]) {
+				pos = j;
+				int temp = a[j];
+				a[j] = a[j + 1];
+				a[j + 1] = temp;
+			}
+		}
+		i = pos;
+		PrintBubbleSort(a, n, i);
+	}
+}
+void BubbleSort2(int a[], int n) {
+	int low = 0;
+	int high = n - 1;
+	int j, temp;
+	while (low < high) {
+		for (j = low; j < high; j++) {
+			if (a[j] > a[j + 1]) {
+				temp = a[j];
+				a[j] = a[j + 1];
+				a[j + 1] = temp;
+			}
+		}
+		--high;
+		for (j = high; j > low; --j) {
+			if (a[j] < a[j - 1]) {
+				temp = a[j];
+				a[j] = a[j - 1];
+				a[j - 1] = temp;
+			}
+		}
+		++low;
+		PrintBubbleSort(a, n, n);
+	}
+}
+void BubbleSortTest() {
+	int a[] = { 3, 2, 1, 5, 8, 9, 4, 3, 11, 10 };
+	int n = sizeof(a) / sizeof(int);
+	//BubbleSort(a, n);
+	//BubbleSort1(a, n);
+	BubbleSort2(a, n);
+	PrintBubbleSort(a, n, n);
+}

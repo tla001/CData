@@ -20,4 +20,9 @@ void DirectInsertSortTest();
 void BinaryInsertSortTest();
 void TwoInsertSortTest();
 
+void ShellInsertSortTest();
+void SelectSortTest();
+void HeapSortTest();
+void BubbleSortTest();
+
 #endif /* INC_MYSORT_H_ */

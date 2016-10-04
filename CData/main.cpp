@@ -43,6 +43,11 @@ int main() {
 	//DirectInsertSortTest();
 	//BinaryInsertSortTest();
 	//TwoInsertSortTest();
+	//ShellInsertSortTest();
+	//SelectSortTest();
+	//HeapSortTest();
+	BubbleSortTest();
+
 	return 0;
 }
 
