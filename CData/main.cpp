@@ -46,7 +46,9 @@ int main() {
 	//ShellInsertSortTest();
 	//SelectSortTest();
 	//HeapSortTest();
-	BubbleSortTest();
+	//BubbleSortTest();
+	//QuickSortTest();
+	RadixSortTest();
 
 	return 0;
 }

@@ -24,5 +24,7 @@ void ShellInsertSortTest();
 void SelectSortTest();
 void HeapSortTest();
 void BubbleSortTest();
+void QuickSortTest();
+void RadixSortTest();
 
 #endif /* INC_MYSORT_H_ */

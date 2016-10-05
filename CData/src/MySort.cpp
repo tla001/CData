@@ -424,3 +424,118 @@ void BubbleSortTest() {
 	BubbleSort2(a, n);
 	PrintBubbleSort(a, n, n);
 }
+/******************快速排序************************/
+void PrintQuickSort(int a[], int n, int i) {
+	cout << i << ":";
+	for (int j = 0; j < n; j++) {
+		cout << a[j] << "\t";
+	}
+	cout << endl;
+}
+void QuickSort(int a[], int left, int right) {
+	if (left > right)
+		return;
+	int proKey = a[left];
+	int i, j;
+	i = left;
+	j = right;
+	while (i != j) {
+		while (a[j] >= proKey && j > i) {
+			j--;
+		}
+		while (a[i] <= proKey && i < j) {
+			i++;
+		}
+		if (i < j) {
+			int temp = a[i];
+			a[i] = a[j];
+			a[j] = temp;
+		}
+	}
+	a[left] = a[i];
+	a[i] = proKey;
+	//显示排序轨迹
+	PrintQuickSort(a, 10, i);
+	QuickSort(a, left, i - 1);
+	QuickSort(a, i + 1, right);
+}
+void QuickSortTest() {
+	int a[] = { 3, 2, 1, 5, 8, 9, 4, 3, 11, 10 };
+	int n = sizeof(a) / sizeof(int);
+	QuickSort(a, 0, n - 1);
+	PrintQuickSort(a, n, n);
+}
+/******************快速排序************************/
+void PrintRadixSort(int a[], int n, int i) {
+	cout << i << ":";
+	for (int j = 0; j < n; j++) {
+		cout << a[j] << "\t";
+	}
+	cout << endl;
+}
+//得到最大数字位数
+int getNums(int a[], int n) {
+	int max = 0;
+	for (int i = 0; i < n; i++) {
+		if (a[i] > max) {
+			max = a[i];
+		}
+	}
+	int j = 1;
+	while (max >= 10) {
+		j++;
+		max /= 10;
+	}
+	return j;
+}
+//得到某位上的数字,最大支持5位数
+int getDigit(int x, int d) {
+	int temp[] = { 1, 10, 100, 1000, 10000 };
+	return ((x / temp[d - 1]) % 10);
+}
+//n长度，radix基数个数
+void RadixSort(int a[], int n, int radix) {
+	int *count = (int *) malloc(sizeof(int) * radix);
+	int *bucket = (int *) malloc(sizeof(int) * n);
+	int digit = getNums(a, n);	//得到最大数字位数
+	int i = 0, j = 0;
+	//LSD 从低位到高位排序
+	for (int d = 1; d <= digit; d++) {
+		//清空计数
+		for (i = 0; i < radix; i++) {
+			count[i] = 0;
+		}
+		//统计各个桶要装入数据的个数
+		for (i = 0; i < n; i++) {
+			j = getDigit(a[i], d);
+			count[j]++;
+		}
+		// count[i]表示第i个桶的右边界索引,将桶映射到数组
+		//--|---|----|-----|
+		for (i = 1; i < radix; i++) {
+			count[i] = count[i] + count[i - 1];
+		}
+		// 将数据依次装入桶中
+		// 这里要从右向左扫描，保证排序稳定性
+		for (i = n - 1; i >= 0; i--) {
+			j = getDigit(a[i], d);
+			bucket[count[j] - 1] = a[i];		//根据索引，得到桶对应数组的位置，从后向前
+			count[j]--;
+		}
+		for (i = 0; i < n; i++) {
+			a[i] = bucket[i];
+		}
+		PrintRadixSort(a, n, d);
+	}
+
+	free(count);
+	free(bucket);
+}
+void RadixSortTest() {
+	int a[] = { 3, 500, 10, 1012, 100, 6 };
+	int n = sizeof(a) / sizeof(int);
+	//cout << getNums(a, n) << endl;
+	//cout << getDigit(68935, 4) << endl;
+	RadixSort(a, n, 10);
+	PrintRadixSort(a, n, n);
+}
