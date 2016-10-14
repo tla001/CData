@@ -54,7 +54,7 @@ int main() {
 
 	//OrderSearchTest();
 	//BinarySearchTest();
-	hashTableTest();
+	//hashTableTest();
 
 	return 0;
 }
