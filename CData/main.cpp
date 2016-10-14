@@ -48,7 +48,13 @@ int main() {
 	//HeapSortTest();
 	//BubbleSortTest();
 	//QuickSortTest();
-	RadixSortTest();
+	//RadixSortTest();
+
+	//OutSortTest();
+
+	//OrderSearchTest();
+	//BinarySearchTest();
+	hashTableTest();
 
 	return 0;
 }

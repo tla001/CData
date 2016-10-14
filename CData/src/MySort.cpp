@@ -455,7 +455,7 @@ void QuickSort(int a[], int left, int right) {
 	a[left] = a[i];
 	a[i] = proKey;
 	//显示排序轨迹
-	PrintQuickSort(a, 10, i);
+	//PrintQuickSort(a, 10, i);
 	QuickSort(a, left, i - 1);
 	QuickSort(a, i + 1, right);
 }
@@ -465,7 +465,7 @@ void QuickSortTest() {
 	QuickSort(a, 0, n - 1);
 	PrintQuickSort(a, n, n);
 }
-/******************快速排序************************/
+/******************基数排序************************/
 void PrintRadixSort(int a[], int n, int i) {
 	cout << i << ":";
 	for (int j = 0; j < n; j++) {
@@ -538,4 +538,124 @@ void RadixSortTest() {
 	//cout << getDigit(68935, 4) << endl;
 	RadixSort(a, n, 10);
 	PrintRadixSort(a, n, n);
+}
+/******************外排序************************/
+#include <stdio.h>
+#include <time.h>
+#include <math.h>
+//在文件中随机产生m个数据，每个一行
+void OutSortGenData(char *fileName, int m) {
+	FILE *fp = fopen(fileName, "w");
+	if (fp == NULL) {
+		printf("open file failed \n");
+		exit(-1);
+	}
+	srand(time(0));
+	for (int i = 0; i < m; i++) {
+		int temp = (rand() << 15) | rand();	//rand一般产生15位随机数(32767)，扩展成30位
+		fprintf(fp, "%d\n", temp);
+	}
+	fclose(fp);
+}
+void OutSortSplit(char *fileName, int m, int n) {
+	FILE *in = fopen(fileName, "r");
+	int *buf = (int *) malloc(sizeof(int) * n);
+	int k = ceil(double(m) / n);
+	for (int i = 0, j; i < k; i++) {
+		for (j = 0; j < n; j++) {
+			if (fscanf(in, "%d", buf + j) != 1)
+				break;
+		}
+		int num = j;
+		QuickSort(buf, 0, num - 1);
+		char tempfile[20];
+		sprintf(tempfile, "./res/tempfile_%d.txt", i);
+		FILE *out = fopen(tempfile, "w");
+		for (j = 0; j < num; j++) {
+			fprintf(out, "%d\n", buf[j]);
+		}
+		fclose(out);
+	}
+	free(buf);
+}
+typedef struct ospair {
+	int num;
+	int pos;
+} OPair;
+void OutSortAdjust(OPair a[], int parent, int length) {
+	OPair temp = a[parent]; //保存当前父节点
+	int child = 2 * parent + 1; //获取左孩子
+	while (child < length) {
+		/*****小顶堆********/
+		//如果有有孩子，且右孩子小于做孩子，选取右孩子节点
+		if (child + 1 < length && a[child].num > a[child + 1].num) {
+			child++;
+		}
+		// 如果父结点的值已经小于孩子结点的值，则直接结束
+		if (a[parent].num < a[child].num) {
+			break;
+		}
+		// 把孩子结点的值赋给父结点
+		a[parent] = a[child];
+		// 选取孩子结点的左孩子结点,继续向下筛选
+		parent = child;
+		child = 2 * child + 1;
+		a[parent] = temp;
+	}
+	//PrintHeapSort(a, length);
+}
+/**
+ * 初始堆进行调整
+ * 将H[0..length-1]建成堆
+ * 调整完之后第一个元素是序列的最小的元素
+ */
+void OutSortBuildHeap(OPair a[], int length) {
+	for (int i = (length - 1) / 2; i >= 0; --i) {
+		OutSortAdjust(a, i, length);
+	}
+}
+void OutSortMerge(char *outfile, int m, int n) {
+	FILE *out = fopen(outfile, "w");
+	int k = ceil((double) m / n);
+	OPair *buf = (OPair *) malloc(sizeof(OPair) * k);
+	FILE **fp = (FILE **) malloc(sizeof(FILE*) * k);
+	for (int i = 0; i < k; i++) {
+		*(fp + i) = (FILE*) malloc(sizeof(FILE));
+		char tempfile[20];
+		sprintf(tempfile, "./res/tempfile_%d.txt", i);
+		fp[i] = fopen(tempfile, "r");
+		int tem;
+		fscanf(fp[i], "%d", &tem);
+		buf[i].num = tem;
+		buf[i].pos = i;
+	}
+	OutSortBuildHeap(buf, k);
+	int nums = 0;
+	while (1) {
+		int minNum = buf[0].num;
+		int minPos = buf[0].pos;
+		if (nums == m)
+			break;
+		fprintf(out, "%d\n", minNum);
+		int tem;
+		fscanf(fp[minPos], "%d", &tem);
+		buf[0].num = tem;
+		OutSortBuildHeap(buf, k);
+		nums++;
+	}
+	for (int i = 0; i < k; i++) {
+		fclose(fp[i]);
+		free(fp[i]);
+	}
+	free(*fp);
+	free(buf);
+	fclose(out);
+}
+void OutSortTest() {
+	char src[] = "./res/src.txt";
+	char result[] = "./res/result.txt";
+	int m = 200, n = 20;
+	OutSortGenData(src, m);
+	OutSortSplit(src, m, n);
+	OutSortMerge(result, m, n);
 }

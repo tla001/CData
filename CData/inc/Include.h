@@ -10,6 +10,7 @@
 
 #include<iostream>
 #include<stdlib.h>
+#include<stdio.h>
 //#include<vector>
 
 using namespace std;
@@ -24,5 +25,6 @@ using namespace std;
 #include "MyTree.h"
 #include "MyGraph.h"
 #include "MySort.h"
+#include "MySearch.h"
 
 #endif /* INCLUDE_H_ */
