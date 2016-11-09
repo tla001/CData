@@ -25,7 +25,7 @@ int main() {
 	//BitTreeTest3();
 	//BitTreeTest4();
 	//BitTreeTest5();
-	//BstTest();
+	BstTest();
 	//AVLTest();
 
 	//MGraphTest();

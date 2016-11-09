@@ -497,8 +497,10 @@ void BstTest() {
 	BstInsert(T, '5');
 	InOrderTraverseFor(T);
 	cout << endl;
-	BstDelete(T, '2');
+	//BstDelete(T, '2');
 	PreOrderTraverseFor(T);
+	cout << endl;
+	PostOrderTraverseFor(T);
 	cout << endl;
 	pos = BstFindMin(T);
 	cout << "min: " << pos->data << endl;
